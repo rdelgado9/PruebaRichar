@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="pruebaTecModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Personas">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="Nombres" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Apellidos" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NumeroIdentificacion" Type="bigint" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="TipoIdentificacion" Type="nchar" MaxLength="3" Nullable="false" />
+          <Property Name="fechaCreacion" Type="datetime" Nullable="false" />
+          <Property Name="nombreCompleto" Type="varchar" MaxLength="101" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="identificacionFull" Type="nvarchar" MaxLength="54" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="TipoIdentificacion">
+          <Key>
+            <PropertyRef Name="cod_identificacion" />
+          </Key>
+          <Property Name="cod_identificacion" Type="nchar" MaxLength="3" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Usuario" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="pass" Type="varbinary" MaxLength="128" Nullable="false" />
+          <Property Name="fechaCreacion" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Personas_TipoIdentificacion">
+          <End Role="TipoIdentificacion" Type="Self.TipoIdentificacion" Multiplicity="1" />
+          <End Role="Personas" Type="Self.Personas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoIdentificacion">
+              <PropertyRef Name="cod_identificacion" />
+            </Principal>
+            <Dependent Role="Personas">
+              <PropertyRef Name="TipoIdentificacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personas_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Personas" Type="Self.Personas" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="Personas">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="DecryptPassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="usuario" Type="varchar" Mode="In" />
+          <Parameter Name="password" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="EncrypPassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="password" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="prc_consultarPersonas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="pruebaTecModelStoreContainer">
+          <EntitySet Name="Personas" EntityType="Self.Personas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TipoIdentificacion" EntityType="Self.TipoIdentificacion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Personas_TipoIdentificacion" Association="Self.FK_Personas_TipoIdentificacion">
+            <End Role="TipoIdentificacion" EntitySet="TipoIdentificacion" />
+            <End Role="Personas" EntitySet="Personas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personas_Usuario" Association="Self.FK_Personas_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Personas" EntitySet="Personas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="pruebaTecModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TipoIdentificacion">
+          <Key>
+            <PropertyRef Name="cod_identificacion" />
+          </Key>
+          <Property Name="cod_identificacion" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Personas" Relationship="pruebaTecModel.FK_Personas_TipoIdentificacion" FromRole="TipoIdentificacion" ToRole="Personas" />
+        </EntityType>
+        <EntityContainer Name="pruebaTecEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="TipoIdentificacion" EntityType="Self.TipoIdentificacion" />
+          <FunctionImport Name="prc_consultarPersonas" ReturnType="Collection(pruebaTecModel.prc_consultarPersonas_Result)" />
+          <EntitySet Name="Personas" EntityType="pruebaTecModel.Personas" />
+          <AssociationSet Name="FK_Personas_TipoIdentificacion" Association="pruebaTecModel.FK_Personas_TipoIdentificacion">
+            <End Role="TipoIdentificacion" EntitySet="TipoIdentificacion" />
+            <End Role="Personas" EntitySet="Personas" />
+          </AssociationSet>
+          <EntitySet Name="Usuario" EntityType="pruebaTecModel.Usuario" />
+          <AssociationSet Name="FK_Personas_Usuario" Association="pruebaTecModel.FK_Personas_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Personas" EntitySet="Personas" />
+          </AssociationSet>
+          <FunctionImport Name="EncrypPassword" ReturnType="Collection(Binary)">
+          <Parameter Name="password" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="DecryptPassword" ReturnType="Collection(Int32)">
+            <Parameter Name="usuario" Mode="In" Type="String" />
+            <Parameter Name="password" Mode="In" Type="String" />
+          </FunctionImport>
+          </EntityContainer>
+        <ComplexType Name="prc_consultarPersonas_Result">
+          <Property Type="Int32" Name="Identificaodr" Nullable="false" />
+          <Property Type="String" Name="Nombres" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Apellidos" Nullable="false" MaxLength="50" />
+          <Property Type="Int64" Name="NumeroIdentificacion" Nullable="false" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="TipoIdentificacion" Nullable="false" MaxLength="3" />
+          <Property Type="DateTime" Name="fechaCreacion" Nullable="false" Precision="23" />
+          <Property Type="String" Name="nombreCompleto" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="identificacionFull" Nullable="true" MaxLength="54" />
+        </ComplexType>
+        <EntityType Name="Personas">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="Nombres" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Apellidos" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NumeroIdentificacion" Type="Int64" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TipoIdentificacion" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="fechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="nombreCompleto" Type="String" Nullable="false" MaxLength="101" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="identificacionFull" Type="String" MaxLength="54" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="TipoIdentificacion1" Relationship="pruebaTecModel.FK_Personas_TipoIdentificacion" FromRole="Personas" ToRole="TipoIdentificacion" />
+          <NavigationProperty Name="Usuario" Relationship="pruebaTecModel.FK_Personas_Usuario" FromRole="Personas" ToRole="Usuario" />
+        </EntityType>
+        <Association Name="FK_Personas_TipoIdentificacion">
+          <End Type="pruebaTecModel.TipoIdentificacion" Role="TipoIdentificacion" Multiplicity="1" />
+          <End Type="pruebaTecModel.Personas" Role="Personas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoIdentificacion">
+              <PropertyRef Name="cod_identificacion" />
+            </Principal>
+            <Dependent Role="Personas">
+              <PropertyRef Name="TipoIdentificacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Usuario1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="pass" Type="Binary" Nullable="false" MaxLength="128" FixedLength="false" />
+          <Property Name="fechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Personas" Relationship="pruebaTecModel.FK_Personas_Usuario" FromRole="Usuario" ToRole="Personas" />
+        </EntityType>
+        <Association Name="FK_Personas_Usuario">
+          <End Type="pruebaTecModel.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="pruebaTecModel.Personas" Role="Personas" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="Personas">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="pruebaTecModelStoreContainer" CdmEntityContainer="pruebaTecEntities">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="pruebaTecModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipoIdentificacion">
+            <EntityTypeMapping TypeName="pruebaTecModel.TipoIdentificacion">
+              <MappingFragment StoreEntitySet="TipoIdentificacion">
+                <ScalarProperty Name="cod_identificacion" ColumnName="cod_identificacion" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="prc_consultarPersonas" FunctionName="pruebaTecModel.Store.prc_consultarPersonas">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="pruebaTecModel.prc_consultarPersonas_Result">
+                <ScalarProperty Name="Identificaodr" ColumnName="Identificaodr" />
+                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+                <ScalarProperty Name="NumeroIdentificacion" ColumnName="NumeroIdentificacion" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="TipoIdentificacion" ColumnName="TipoIdentificacion" />
+                <ScalarProperty Name="fechaCreacion" ColumnName="fechaCreacion" />
+                <ScalarProperty Name="nombreCompleto" ColumnName="nombreCompleto" />
+                <ScalarProperty Name="identificacionFull" ColumnName="identificacionFull" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Personas">
+            <EntityTypeMapping TypeName="pruebaTecModel.Personas">
+              <MappingFragment StoreEntitySet="Personas">
+                <ScalarProperty Name="identificacionFull" ColumnName="identificacionFull" />
+                <ScalarProperty Name="nombreCompleto" ColumnName="nombreCompleto" />
+                <ScalarProperty Name="fechaCreacion" ColumnName="fechaCreacion" />
+                <ScalarProperty Name="TipoIdentificacion" ColumnName="TipoIdentificacion" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="NumeroIdentificacion" ColumnName="NumeroIdentificacion" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuario">
+            <EntityTypeMapping TypeName="pruebaTecModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="fechaCreacion" ColumnName="fechaCreacion" />
+                <ScalarProperty Name="pass" ColumnName="pass" />
+                <ScalarProperty Name="Usuario1" ColumnName="Usuario" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="EncrypPassword" FunctionName="pruebaTecModel.Store.EncrypPassword" />
+          <FunctionImportMapping FunctionImportName="DecryptPassword" FunctionName="pruebaTecModel.Store.DecryptPassword" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
